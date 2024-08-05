@@ -78,6 +78,39 @@ class Game:
                     break
 
 
+    def eleccionJugador(self):
+        intentos = 1
+        
+        while True:
+            if intentos > 12:
+                print("Número máximo de intentos alcanzado. Perdiste.")
+                break
+            
+            print(f"Ronda: {intentos}")
+            eleccionJugador = []
+            
+            while len(eleccionJugador) < 4:
+                opcion = input("Elige los colores de tu secuencia (r/b/y/g). Para terminar la secuencia: ").strip().lower()
+                
+                match opcion:
+                    case "r":
+                        eleccionJugador.append(self.rojo)
+                    case "b":
+                        eleccionJugador.append(self.azul)
+                    case "y":
+                        eleccionJugador.append(self.amarillo)
+                    case "g":
+                        eleccionJugador.append(self.verde)
+                    case _:
+                        print("Introduzca una respuesta correcta.")
+                
+                print("|", "".join(eleccionJugador) + self.reset, "|")
+            if eleccionJugador == self.secuencia:
+                print("¡Felicidades, has ganado!")
+                break
+            else:
+                eleccionJugador = []
+                intentos += 1
 
 def main():
     Juego = Game(azul=(Fore.BLUE + " O "), rojo=(Fore.RED + " O "), amarillo=(Fore.YELLOW + " O "), verde=(Fore.GREEN + " O "), reset=Fore.RESET)
