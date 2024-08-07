@@ -3,19 +3,17 @@ from time import sleep
 import random
 
 class Game:
-    def __init__(self, rojo, azul, verde, amarillo, reset, pista1, pista2, pista3, pista4):
+    def __init__(self, rojo, azul, verde, amarillo, reset):
         self.rojo = rojo
         self.azul = azul
         self.verde = verde
         self.amarillo = amarillo
         self.reset = reset
-        self.pista1 = pista1
-        self.pista2 = pista2
-        self.pista3 = pista3
-        self.pista4 = pista4
-        self.pistas = [pista1, pista2, pista3, pista4]
+        self.pistas = [' ⬜ ', ' ⬜ ', ' ⬜ ', ' ⬜ ']
         self.secuencia = []
         self.intentoDeAdivinarSecuencia = []
+        self.color_a_verificar = ['🟡', '🟢', '🔴', '🔵']
+        self.pistas_actualizadas = self.generarPistas()
 
     def elegirModo(self):
         while True:
@@ -75,7 +73,8 @@ class Game:
                 intentos += 1
                 print(f"Intento: {intentos}")
                 eleccionComputadora = [random.choice(posiblesOpciones) for _ in range(4)]
-                print('La elección de la computadora es: ', "|" + ''.join(eleccionComputadora), "|",  ''.join(self.pistas) + self.reset)
+                print('La elección de la computadora es: ', "|" + ''.join(eleccionComputadora) + Fore.RESET, ''.join(self.generarPistas(eleccionComputadora)))
+
                 if eleccionComputadora == self.secuencia:
                     print("¡La computadora ha ganado!")
                     print(''.join(eleccionComputadora) + self.reset)
@@ -119,42 +118,28 @@ class Game:
                 eleccionJugador = []
                 intentos += 1
 
-    def generarPistas(self):
-        pistas = [self.pista1, self.pista2, self.pista3, self.pista4]
-        secuencia = self.secuencia
+    def generarPistas(self, secuencia=None):
+        if secuencia is None:
+            secuencia = self.secuencia
+        
+        self.pistas = [' ⬜ ', ' ⬜ ', ' ⬜ ', ' ⬜ ']  # Reinicia las pistas a blanco por defecto
+
+        for i in range(len(secuencia)):
+            if secuencia[i] == self.secuencia[i]:
+                self.pistas[i] = ' 🟩 '
+            elif secuencia[i] in self.secuencia:
+                self.pistas[i] = ' 🟨 '
+
+        return self.pistas
+
+    def fuerzaBruta(self):
+        # ¡Oh no, hermano, oh no, hermano!
+        pass
         
 
 def main():
-    Juego = Game(azul=" 🔵 ", rojo=" 🔴 ", amarillo=" 🟡 ", verde=" 🟢 ", pista1=(Fore.GREEN + " o "), pista2=(Fore.LIGHTRED_EX + " o "), pista3=(Fore.WHITE + " o "), pista4=(Fore.WHITE + " o "), reset=Fore.RESET)
+    Juego = Game(azul=" 🔵 ", rojo=" 🔴 ", amarillo=" 🟡 ", verde=" 🟢 ", reset=Fore.RESET)
     Juego.elegirModo()
 
 if __name__ == "__main__":
     main()
-    
-    
-from colorama import Fore
-# secuencia con clores a verifivcar
-secuencia_secreta = ["🟡", "🟢", "🔴", "🔵"]
-pistas = [' ⬜ ', ' ⬜ ', ' ⬜ ', ' ⬜ ']
-
-# Función flecha, mntira, verificadora
-def actualizar_pistas(color_a_verificar, pistas, secuencia):
-    
-    
-    for i in range(len(secuencia)):    
-
-
-        if secuencia[i] == color_a_verificar:
-            
-            
-            pistas[i] = ' 🟩 ' # 🟩🟧 
-            
-            
-            
-    return pistas
-
- # Verrrrificamos, por fin¡
-color_a_verificar = "🔴"
-pistas_actualizadas = actualizar_pistas(color_a_verificar, pistas, secuencia_secreta)
-
-print(''.join(pistas_actualizadas) + Fore.RESET) 
