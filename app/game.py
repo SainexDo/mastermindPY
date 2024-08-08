@@ -18,41 +18,34 @@ class Game:
 
     def elegirModo(self):
         while True:
-            respuesta = input(f'¿Adivinas o creas la secuencia? (Adivinar / Crear): ').strip().lower()
-            if respuesta not in ('adivinar', 'crear'):
+            respuesta = input(f'¡Bienvenido a Mastermind! \n1. Adivinar. \n2. Crear secuencia.\n').strip().lower()
+            if respuesta not in ('1', '2'):
                 print("Agrega una respuesta correcta.")
             else:
-                if respuesta == 'adivinar':
+                if respuesta == '1':
                     self.creaComputadora()
-                elif respuesta == 'crear':
+                elif respuesta == '2':
                     self.creaJugador()
                 break
 
     def creaJugador(self):
-        posiblesOpciones = [self.rojo, self.azul, self.amarillo, self.verde]
+        posiblesOpciones = {'r': self.rojo, 'b': self.azul, 'y': self.amarillo, 'g': self.verde}
         while True:
-            opcion = input("Elige los colores de tu secuencia (r/b/y/g): ").strip().lower()
-            if len(self.secuencia) < 4:
-                match opcion:
-                    case "r":
-                        self.secuencia.append(posiblesOpciones[0])
-                    case "b":
-                        self.secuencia.append(posiblesOpciones[1])
-                    case "y":
-                        self.secuencia.append(posiblesOpciones[2])
-                    case "g":
-                        self.secuencia.append(posiblesOpciones[3])
-                    case _:
-                        print("Introduzca una respuesta correcta.")
-                print("|", "".join(self.secuencia) + self.reset, "|")
-                if len(self.secuencia) == 4:
-                    confirm = input(f"¿Confirmar secuencia? (S/N): ").strip().lower()
-                    if confirm == "s":
-                        self.fuerzaBruta()
-                        break
-                    else:
-                        self.secuencia = []
-        return self.secuencia
+            opcion = input("Elige los colores de tu secuencia ( r / b / y / g ): ").strip().lower()
+            
+            if len(opcion) != 4 or any(i not in posiblesOpciones for i in opcion):
+                print("Introduzca una secuencia válida.")
+            
+            self.secuencia = [posiblesOpciones[i] for i in opcion]
+            print("|", "".join(self.secuencia) + self.reset, "|")
+            
+            confirm = input(f"¿Confirmar secuencia? (S/N): ").strip().lower()
+            if confirm == "s":
+                self.fuerzaBruta()
+                break
+            else:
+                self.secuencia = []
+
 
     def creaComputadora(self):
         posiblesOpciones = [self.rojo, self.azul, self.amarillo, self.verde]
@@ -63,37 +56,25 @@ class Game:
         print("".join(self.secuencia) + self.reset)
 
     def eleccionJugador(self):
+        posiblesOpciones = {'r': self.rojo, 'b': self.azul, 'y': self.amarillo, 'g': self.verde}
         intentos = 0
-        print("Elige los colores de tu secuencia (r/b/y/g). Para terminar la secuencia: ")
+        print("Introduce tu secuencia de 4 colores ( r / b / y / g ): ")
+
         while True:
             if intentos == 12:
                 print("Número máximo de intentos alcanzado. Perdiste.")
-                break
-            eleccionJugador = []
-            while len(eleccionJugador) < 4:
-                opcion = input().strip().lower()
-                match opcion:
-                    case "r":
-                        eleccionJugador.append(self.rojo)
-                        self.generarPistas()
-                    case "b":
-                        eleccionJugador.append(self.azul)
-                        self.generarPistas()
-                    case "y":
-                        eleccionJugador.append(self.amarillo)
-                        self.generarPistas()
-                    case "g":
-                        eleccionJugador.append(self.verde)
-                        self.generarPistas()
-                    case _:
-                        print("Introduzca una respuesta correcta.")
+            opcion = input().strip().lower()
+            if len(opcion) != 4 or any(i not in posiblesOpciones for i in opcion):
+                print("Introduzca una secuencia válida.")
+            eleccionJugador = [posiblesOpciones[i] for i in opcion]
             if eleccionJugador == self.secuencia:
                 print("¡Felicidades, has ganado!")
                 break
             else:
                 pistas = self.generarPistas(eleccionJugador)
-                print(f"Intento {intentos + 1}: | {"".join(eleccionJugador) + self.reset} | {''.join(pistas) + self.reset}")
-                eleccionJugador = []
+                print(f"Intento {intentos + 1}: | {''.join(eleccionJugador) + self.reset} | {''.join(pistas) + self.reset}")
+                intentos += 1
+
 
     def generarPistas(self, secuencia=None):
         ORANGE = '\033[38;5;208m'
